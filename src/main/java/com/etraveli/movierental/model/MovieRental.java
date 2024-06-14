@@ -1,5 +1,8 @@
 package com.etraveli.movierental.model;
 
+import lombok.Getter;
+
+@Getter
 public class MovieRental {
     private String movieId;
     private int days;
@@ -7,13 +10,5 @@ public class MovieRental {
     public MovieRental(String movieId, int days) {
         this.movieId = movieId;
         this.days = days;
-    }
-
-    public String getMovieId() {
-        return movieId;
-    }
-
-    public int getDays() {
-        return days;
     }
 }
