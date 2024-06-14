@@ -24,10 +24,10 @@ class MovieServiceTest {
     private final String movieId2 = "F002";
     private final String movieId3 = "F003";
     private final String movieId4 = "F004";
-    private final String InvalidMovieId = "F099";
+    private final String InvalidMovieId = "F100";
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         movieService.movies.clear();
         movieService.movies.put(movieId1, new Movie(movieId1, "You've Got Mail", MovieCategory.REGULAR));
         movieService.movies.put(movieId2, new Movie(movieId2, "Matrix", MovieCategory.REGULAR));
@@ -39,7 +39,7 @@ class MovieServiceTest {
     @Test
     void testRegisterMovie() {
         // Given
-        String movieId = "F001";
+        String movieId = "F009";
         Movie movie = new Movie(movieId, "You've Got Mail", MovieCategory.REGULAR);
 
         //When

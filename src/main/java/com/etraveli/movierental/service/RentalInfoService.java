@@ -14,13 +14,10 @@ import static java.util.stream.Collectors.toSet;
 @Service
 public class RentalInfoService {
 
-    private MovieService movieService;
-    private RentalFactory rentalFactory;
+    private final MovieService movieService;
+    private final RentalFactory rentalFactory;
 
-    public RentalInfoService(
-            MovieService movieService,
-            RentalFactory rentalFactory
-    ) {
+    public RentalInfoService(MovieService movieService, RentalFactory rentalFactory) {
         this.movieService = movieService;
         this.rentalFactory = rentalFactory;
     }

@@ -24,9 +24,11 @@ public class MovieService {
      * Note: This method should be updated to persist the movie to a database.
      *
      * @param movie the movie to be saved
+     * @return the {@link Movie} object associated with the given ID
      */
-    public void saveMovie(Movie movie) {
+    public Movie saveMovie(Movie movie) {
         movies.put(movie.getId(), movie);
+        return movie;
     }
 
     /**
