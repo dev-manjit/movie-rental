@@ -1,7 +1,10 @@
 package com.etraveli.movierental.model;
 
+import lombok.Getter;
+
 import java.util.List;
 
+@Getter
 public class Customer {
     private String name;
     private List<MovieRental> rentals;
@@ -11,11 +14,4 @@ public class Customer {
         this.rentals = rentals;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public List<MovieRental> getRentals() {
-        return rentals;
-    }
 }

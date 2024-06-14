@@ -3,56 +3,51 @@ package com.etraveli.movierental.service;
 import com.etraveli.movierental.model.Customer;
 import com.etraveli.movierental.model.Movie;
 import com.etraveli.movierental.model.MovieRental;
+import com.etraveli.movierental.service.rent.RentalFactory;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
+import java.math.BigDecimal;
+import java.util.Optional;
+
+import static java.util.stream.Collectors.toSet;
 
 @Service
 public class RentalInfoService {
 
-  public String statement(Customer customer) {
-    HashMap<String, Movie> movies = new HashMap();
-    movies.put("F001", new Movie("You've Got Mail", "regular"));
-    movies.put("F002", new Movie("Matrix", "regular"));
-    movies.put("F003", new Movie("Cars", "childrens"));
-    movies.put("F004", new Movie("Fast & Furious X", "new"));
+    private MovieService movieService;
+    private RentalFactory rentalFactory;
 
-    double totalAmount = 0;
-    int frequentEnterPoints = 0;
-    String result = "Rental Record for " + customer.getName() + "\n";
-    for (MovieRental r : customer.getRentals()) {
-      double thisAmount = 0;
-
-      // determine amount for each movie
-      if (movies.get(r.getMovieId()).getCode().equals("regular")) {
-        thisAmount = 2;
-        if (r.getDays() > 2) {
-          thisAmount = ((r.getDays() - 2) * 1.5) + thisAmount;
-        }
-      }
-      if (movies.get(r.getMovieId()).getCode().equals("new")) {
-        thisAmount = r.getDays() * 3;
-      }
-      if (movies.get(r.getMovieId()).getCode().equals("childrens")) {
-        thisAmount = 1.5;
-        if (r.getDays() > 3) {
-          thisAmount = ((r.getDays() - 3) * 1.5) + thisAmount;
-        }
-      }
-
-      //add frequent bonus points
-      frequentEnterPoints++;
-      // add bonus for a two day new release rental
-      if (movies.get(r.getMovieId()).getCode() == "new" && r.getDays() > 2) frequentEnterPoints++;
-
-      //print figures for this rental
-      result += "\t" + movies.get(r.getMovieId()).getTitle() + "\t" + thisAmount + "\n";
-      totalAmount = totalAmount + thisAmount;
+    public RentalInfoService(
+            MovieService movieService,
+            RentalFactory rentalFactory
+    ) {
+        this.movieService = movieService;
+        this.rentalFactory = rentalFactory;
     }
-    // add footer lines
-    result += "Amount owed is " + totalAmount + "\n";
-    result += "You earned " + frequentEnterPoints + " frequent points\n";
 
-    return result;
-  }
+    public String generateStatement(Customer customer) {
+        StringBuilder statement = new StringBuilder("Rental Record for " + customer.getName() + "\n");
+        BigDecimal totalRent = BigDecimal.ZERO;
+        Integer frequentEnterPoints = 0;
+
+        var movieIds = customer.getRentals().stream().map(MovieRental::getMovieId).collect(toSet());
+        var movies = movieService.getMovies(movieIds);
+
+        for (MovieRental movieRental : customer.getRentals()) {
+            //todo: throw error
+            Movie movie = Optional.ofNullable(movies.get(movieRental.getMovieId())).orElseThrow(() -> new RuntimeException("Movie Not Found"));
+            var rentalStrategy = rentalFactory.getRentalStrategy(movie.getCode());
+            //Calculate and add Movie rent
+            BigDecimal movieRent = rentalStrategy.calculateMovieRent(movieRental);
+            totalRent = totalRent.add(movieRent);
+            //Calculate and add FrequentEnterPoints
+            frequentEnterPoints += rentalStrategy.calculateFrequentEnterPoints(movieRental);
+
+            statement.append("\t" + movie.getTitle() + "\t" + movieRent + "\n");
+        }
+        statement.append("Amount owed is " + totalRent + "\n");
+        statement.append("You earned " + frequentEnterPoints + " frequent points\n");
+        return statement.toString();
+    }
+
 }
