@@ -21,7 +21,7 @@ public class NewMovieRentalStrategy implements RentalStrategy {
      */
     @Override
     public BigDecimal calculateMovieRent(MovieRental movieRental) {
-        return NORMAL_RENT.multiply(new BigDecimal(movieRental.getDays()));
+        return NORMAL_RENT.multiply(new BigDecimal(movieRental.days()));
     }
 
     /**
@@ -33,6 +33,6 @@ public class NewMovieRentalStrategy implements RentalStrategy {
      */
     @Override
     public int calculateFrequentEnterPoints(MovieRental movieRental) {
-        return movieRental.getDays() > INITIAL_DAYS ? 1 : 0;
+        return movieRental.days() > INITIAL_DAYS ? 1 : 0;
     }
 }

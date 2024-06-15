@@ -69,22 +69,22 @@ class MovieServiceTest {
         //And
         assertThat(movies.get(movieId1))
                 .isNotNull()
-                .extracting(Movie::getId, Movie::getTitle, Movie::getCode)
+                .extracting(Movie::id, Movie::title, Movie::code)
                 .containsExactly("F001", "You've Got Mail", MovieCategory.REGULAR);
         //And
         assertThat(movies.get(movieId2))
                 .isNotNull()
-                .extracting(Movie::getId, Movie::getTitle, Movie::getCode)
+                .extracting(Movie::id, Movie::title, Movie::code)
                 .containsExactly("F002", "Matrix", MovieCategory.REGULAR);
         //And
         assertThat(movies.get(movieId3))
                 .isNotNull()
-                .extracting(Movie::getId, Movie::getTitle, Movie::getCode)
+                .extracting(Movie::id, Movie::title, Movie::code)
                 .containsExactly("F003", "Cars", MovieCategory.CHILDREN);
         //And
         assertThat(movies.get(movieId4))
                 .isNotNull()
-                .extracting(Movie::getId, Movie::getTitle, Movie::getCode)
+                .extracting(Movie::id, Movie::title, Movie::code)
                 .containsExactly("F004", "Fast & Furious X", MovieCategory.NEW);
     }
 
@@ -115,7 +115,7 @@ class MovieServiceTest {
         //Then
         assertThat(actual)
                 .isNotNull()
-                .extracting(Movie::getId, Movie::getTitle, Movie::getCode)
+                .extracting(Movie::id, Movie::title, Movie::code)
                 .containsExactly("F009", "You've Got Mail", MovieCategory.REGULAR);
     }
 

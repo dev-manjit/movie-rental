@@ -28,28 +28,28 @@ public class RentalInfoService {
 
     public String generateStatement(Customer customer) {
 
-        StringBuilder statement = new StringBuilder("Rental Record for " + customer.getName() + "\n");
+        StringBuilder statement = new StringBuilder("Rental Record for " + customer.name() + "\n");
         BigDecimal totalRent = BigDecimal.ZERO;
         Integer frequentEnterPoints = 0;
 
-        var movieIds = customer.getRentals().stream().map(MovieRental::getMovieId).collect(toSet());
+        var movieIds = customer.rentals().stream().map(MovieRental::movieId).collect(toSet());
         var movies = movieService.getMovies(movieIds);
 
-        for (MovieRental movieRental : customer.getRentals()) {
-            if (movieRental.getDays()<1) {
+        for (MovieRental movieRental : customer.rentals()) {
+            if (movieRental.days()<1) {
                 throw new IllegalOperationException(RentalError.RENTAL_DAYS_INVALID);
             }
-            Movie movie = Optional.ofNullable(movies.get(movieRental.getMovieId()))
+            Movie movie = Optional.ofNullable(movies.get(movieRental.movieId()))
                     .orElseThrow(() -> new RecordNotFoundException(RentalError.MOVIE_NOT_FOUND));
 
-            var rentalStrategy = rentalFactory.getRentalStrategy(movie.getCode());
+            var rentalStrategy = rentalFactory.getRentalStrategy(movie.code());
             //Calculate and add Movie rent
             BigDecimal movieRent = rentalStrategy.calculateMovieRent(movieRental);
             totalRent = totalRent.add(movieRent);
             //Calculate and add FrequentEnterPoints
             frequentEnterPoints += rentalStrategy.calculateFrequentEnterPoints(movieRental);
 
-            statement.append("\t" + movie.getTitle() + "\t" + movieRent + "\n");
+            statement.append("\t" + movie.title() + "\t" + movieRent + "\n");
         }
         statement.append("Amount owed is " + totalRent + "\n");
         statement.append("You earned " + frequentEnterPoints + " frequent points\n");

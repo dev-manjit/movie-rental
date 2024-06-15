@@ -76,11 +76,11 @@ class RentalInfoServiceTest {
         String statement = rentalInfoService.generateStatement(customer);
 
         // Then
-        StringBuilder expected = new StringBuilder("Rental Record for " + customer.getName() + "\n");
-        expected.append("\t" + movies.get(movieId1).getTitle() + "\t" + BigDecimal.TEN + "\n");
-        expected.append("\t" + movies.get(movieId2).getTitle() + "\t" + BigDecimal.TEN + "\n");
-        expected.append("\t" + movies.get(movieId3).getTitle() + "\t" + BigDecimal.TEN + "\n");
-        expected.append("\t" + movies.get(movieId4).getTitle() + "\t" + BigDecimal.TEN + "\n");
+        StringBuilder expected = new StringBuilder("Rental Record for " + customer.name() + "\n");
+        expected.append("\t" + movies.get(movieId1).title() + "\t" + BigDecimal.TEN + "\n");
+        expected.append("\t" + movies.get(movieId2).title() + "\t" + BigDecimal.TEN + "\n");
+        expected.append("\t" + movies.get(movieId3).title() + "\t" + BigDecimal.TEN + "\n");
+        expected.append("\t" + movies.get(movieId4).title() + "\t" + BigDecimal.TEN + "\n");
         expected.append("Amount owed is 40\n");
         expected.append("You earned 4 frequent points\n");
 

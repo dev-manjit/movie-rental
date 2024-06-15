@@ -24,8 +24,8 @@ public class RegularMovieRentalStrategy implements RentalStrategy {
     @Override
     public BigDecimal calculateMovieRent(MovieRental movieRental) {
 
-        if (movieRental.getDays() > INITIAL_DAYS) {
-            var exceedDays = new BigDecimal(movieRental.getDays() - INITIAL_DAYS);
+        if (movieRental.days() > INITIAL_DAYS) {
+            var exceedDays = new BigDecimal(movieRental.days() - INITIAL_DAYS);
             return INITIAL_AMOUNT.add(NORMAL_RENT.multiply(exceedDays));
         }
         return INITIAL_AMOUNT;

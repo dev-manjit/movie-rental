@@ -29,7 +29,7 @@ public class MovieService {
      * @return the {@link Movie} object associated with the given ID
      */
     public Movie saveMovie(Movie movie) {
-        movies.put(movie.getId(), movie);
+        movies.put(movie.id(), movie);
         return movie;
     }
 
