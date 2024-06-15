@@ -1,5 +1,7 @@
 package com.etraveli.movierental.service;
 
+import com.etraveli.movierental.exception.IllegalOperationException;
+import com.etraveli.movierental.exception.RecordNotFoundException;
 import com.etraveli.movierental.model.Customer;
 import com.etraveli.movierental.model.Movie;
 import com.etraveli.movierental.model.MovieRental;
@@ -17,7 +19,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static com.etraveli.movierental.exception.RentalError.MOVIE_NOT_FOUND;
+import static com.etraveli.movierental.exception.RentalError.RENTAL_DAYS_INVALID;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -40,6 +45,7 @@ class RentalInfoServiceTest {
 
     @Test
     void testGenerateRentalStatement() {
+
         // Given
         final String movieId1 = "F001";
         final String movieId2 = "F002";
@@ -88,4 +94,32 @@ class RentalInfoServiceTest {
         verify(rentalStrategy, times(4)).calculateMovieRent(any(MovieRental.class));
         verify(rentalStrategy, times(4)).calculateFrequentEnterPoints(any(MovieRental.class));
     }
+
+    @Test
+    void generateStatement_InvalidMovieThrowException(){
+        final String invalidMovieId = "999";
+
+        MovieRental invalidMovieRental = new MovieRental(invalidMovieId, 1);
+        Customer customer = new Customer("Manjiith C.", List.of(invalidMovieRental));
+
+        assertThatThrownBy(() -> {
+            this.rentalInfoService.generateStatement(customer);
+        }).isInstanceOf(RecordNotFoundException.class)
+                .hasMessageContaining(MOVIE_NOT_FOUND.getMessage());
+    }
+
+    @Test
+    void generateStatement_InvalidRentalDaysThrowException(){
+        final String movieId1 = "F001";
+        final int invalidDay = -1;
+
+        MovieRental invalidMovieRental = new MovieRental(movieId1, invalidDay);
+        Customer customer = new Customer("Manjiith C.", List.of(invalidMovieRental));
+
+        assertThatThrownBy(() -> {
+            this.rentalInfoService.generateStatement(customer);
+        }).isInstanceOf(IllegalOperationException.class)
+                .hasMessageContaining(RENTAL_DAYS_INVALID.getMessage());
+    }
+
 }

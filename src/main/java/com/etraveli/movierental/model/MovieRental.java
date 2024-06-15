@@ -11,7 +11,6 @@ public class MovieRental {
     @NotNull(message = "movieId must not be null")
     private String movieId;
     @NotNull(message = "rental days must not be null")
-    @Positive(message = "rental days must be positive integer")
     private Integer days;
 
     public MovieRental(String movieId, Integer days) {

@@ -1,5 +1,8 @@
 package com.etraveli.movierental.service;
 
+import com.etraveli.movierental.exception.IllegalOperationException;
+import com.etraveli.movierental.exception.RecordNotFoundException;
+import com.etraveli.movierental.exception.RentalError;
 import com.etraveli.movierental.model.Customer;
 import com.etraveli.movierental.model.Movie;
 import com.etraveli.movierental.model.MovieRental;
@@ -9,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.Optional;
 
+import static java.util.Objects.isNull;
 import static java.util.stream.Collectors.toSet;
 
 @Service
@@ -23,6 +27,7 @@ public class RentalInfoService {
     }
 
     public String generateStatement(Customer customer) {
+
         StringBuilder statement = new StringBuilder("Rental Record for " + customer.getName() + "\n");
         BigDecimal totalRent = BigDecimal.ZERO;
         Integer frequentEnterPoints = 0;
@@ -31,8 +36,12 @@ public class RentalInfoService {
         var movies = movieService.getMovies(movieIds);
 
         for (MovieRental movieRental : customer.getRentals()) {
-            //todo: throw error
-            Movie movie = Optional.ofNullable(movies.get(movieRental.getMovieId())).orElseThrow(() -> new RuntimeException("Movie Not Found"));
+            if (movieRental.getDays()<1) {
+                throw new IllegalOperationException(RentalError.RENTAL_DAYS_INVALID);
+            }
+            Movie movie = Optional.ofNullable(movies.get(movieRental.getMovieId()))
+                    .orElseThrow(() -> new RecordNotFoundException(RentalError.MOVIE_NOT_FOUND));
+
             var rentalStrategy = rentalFactory.getRentalStrategy(movie.getCode());
             //Calculate and add Movie rent
             BigDecimal movieRent = rentalStrategy.calculateMovieRent(movieRental);

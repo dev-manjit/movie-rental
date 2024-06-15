@@ -1,5 +1,6 @@
 package com.etraveli.movierental.service;
 
+import com.etraveli.movierental.exception.RecordNotFoundException;
 import com.etraveli.movierental.model.Movie;
 import com.etraveli.movierental.service.rent.MovieCategory;
 import org.junit.jupiter.api.BeforeEach;
@@ -126,8 +127,8 @@ class MovieServiceTest {
         // Then
         assertThatThrownBy(() -> {
             this.movieService.getMovieById(invalidMovieId);
-        }).isInstanceOf(NoSuchElementException.class)
-                .hasMessageContaining("Movie not found for id:" + invalidMovieId);
+        }).isInstanceOf(RecordNotFoundException.class)
+                .hasMessageContaining("Movie not found");
     }
 
 }

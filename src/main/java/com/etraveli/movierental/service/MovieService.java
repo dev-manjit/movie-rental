@@ -1,5 +1,7 @@
 package com.etraveli.movierental.service;
 
+import com.etraveli.movierental.exception.RecordNotFoundException;
+import com.etraveli.movierental.exception.RentalError;
 import com.etraveli.movierental.model.Movie;
 import org.springframework.stereotype.Service;
 
@@ -40,7 +42,7 @@ public class MovieService {
      */
     public Movie getMovieById(String id) {
         return Optional.ofNullable(movies.get(id))
-                .orElseThrow(() -> new NoSuchElementException("Movie not found for id:" + id));
+                .orElseThrow(() -> new RecordNotFoundException(RentalError.MOVIE_NOT_FOUND));
     }
 
     /**
