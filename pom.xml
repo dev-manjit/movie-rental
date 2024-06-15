@@ -11,7 +11,7 @@
 	<groupId>com.etraveli</groupId>
 	<artifactId>movierental </artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>MovieRental </name>
+	<name>MovieRental</name>
 	<description>Project for information slip about movie rentals</description>
 	<properties>
 		<java.version>17</java.version>
