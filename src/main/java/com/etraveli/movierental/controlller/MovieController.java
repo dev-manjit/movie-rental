@@ -21,7 +21,7 @@ public class MovieController {
     }
 
     @PostMapping()
-    public ResponseEntity<Movie> registerMovie(@RequestBody Movie movie) {
+    public ResponseEntity<Movie> registerMovie(@Valid @RequestBody Movie movie) {
         return ResponseEntity.ok(movieService.saveMovie(movie));
     }
 
